@@ -1,2 +1,5 @@
 nombre = "pablo"
-print(f"Hola {nombre} este es el segundo commit")
+edad = 33
+print(f"Hola {nombre.title}")
+print(f"Tienes {edad} años")
+print(f"Estoy trabajando en un rama nueva")
