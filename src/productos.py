@@ -1,65 +1,70 @@
-import json #Formato de texto ligero
 
-productos = []
+from database import conectar
 
-ARCHIVO = "productos.json"
+def obtener_productos():
+    conn = conectar()
+    cursor = conn.cursor()
 
-def cargar_productos():
-    global productos
-    try:
-        with open(ARCHIVO, "r", encoding="utf-8") as archivo:
-            productos = json.load(archivo)
-    except FileNotFoundError:
-        producto = []
-    except json.JSONDecodeError:
-        producto = []
+    cursor.execute("SELECT id, nombre, precio FROM productos ORDER BY id ASC")
+    productos = cursor.fetchall()
 
-def guardar_productos():
-    with open(ARCHIVO, "w", encoding="utf-8") as archivo:
-        json.dump(productos, archivo, indent=4, ensure_ascii=False)
+    conn.close()
+    return productos
+
 
 def agregar_producto(nombre, precio):
     if not nombre.strip(): #Verifica si campo esta vacio
-        print("El nombre no puede estar vacio")
-        return
+        return False, "El nombre no puede estar vacio"
+
     if precio <= 0:
-        print("El precio debe ser mayor que 0")
-
-    producto = {
-        "nombre": nombre,
-        "precio": precio
-    }
-    productos.append(producto)
-    guardar_productos()
-    print("Producto agregado correctamente")
-
-def mostrar_productos():
-    if not productos:
-        print("No hay productos registrados")
-        return
+        return False, "El precio debe ser mayor que 0"
     
-    for i, p in enumerate(productos, start=1):
-        print(f"{i}. {p['nombre']} - ${p['precio']}")
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO productos (nombre, precio) VALUES (?,?)",
+        (nombre, precio)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return True, "Producto agregado correctamente"
+
+
+def eliminar_producto(id_producto):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT nombre FROM productos WHERE id = ?", (id_producto,))
+    producto = cursor.fetchone()
+
+    if producto is None:
+        conn.close()
+        return False, "Producto no encontrado"
+    
+    cursor.execute("DELETE FROM productos WHERE id = ?", (id_producto,))
+    conn.commit()
+    conn.close()
+
+    return True, f"Producto eliminado: {producto['nombre']}"
+
 
 def total_productos():
-    total = 0
-    for p in productos:
-        total += p["precio"]
+    conn = conectar()
+    cursor = conn.cursor()
 
-    return total
+    cursor.execute("SELECT SUM(precio) AS total FROM productos")
+    resultado = cursor.fetchone()
 
-def eliminar_producto(indice):
-    if indice <= 0 or indice >= len(productos):
-        print("Índice inválido")
-        return
+    conn.close()
+
+    if resultado["total"] is None:
+        return 0
     
-    eliminado = productos.pop(indice)
-    guardar_productos()
-    print(f"Producto eliminado: {eliminado['nombre']}")
-    
+    return resultado["total"]
 
-def buscar_producto():
-    productos.sort("nombre")
 
 
 

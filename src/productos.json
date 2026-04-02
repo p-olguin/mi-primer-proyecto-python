@@ -1,10 +1,22 @@
 [
     {
         "nombre": "lapiz",
-        "precio": 300.0
+        "precio": 450.0
+    },
+    {
+        "nombre": "cuaderno",
+        "precio": 1500.0
     },
     {
         "nombre": "goma",
-        "precio": 200.0
+        "precio": 300.0
+    },
+    {
+        "nombre": "estuche",
+        "precio": 2500.0
+    },
+    {
+        "nombre": "Corrector",
+        "precio": 600.0
     }
 ]

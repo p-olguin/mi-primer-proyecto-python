@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Productos</h1>
+
+        <a class="boton-volver" href="{{ url_for('inicio') }}">Volver al inicio</a>
+
+        {% if mensaje %}
+            <p class="mensaje">{{ mensaje }}</p>
+        {% endif %}
+
+        <h2>Agregar producto</h2>
+        <form method="POST" class="formulario">
+            <input type="text" name="nombre" placeholder="Nombre del producto" required>
+            <input type="number" name="precio" step="0.01" placeholder="Precio" required>
+            <button type="submit">Agregar</button>
+        </form>
+
+        <h2>Listado</h2>
+
+        {% if productos %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.id }}</td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>${{ producto.precio }}</td>
+                        <td>
+                            <a class="eliminar" href="{{ url_for('eliminar', id_producto=producto.id) }}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h3>Total: ${{ total }}</h3>
+        {% else %}
+            <p>No hay productos registrados.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
