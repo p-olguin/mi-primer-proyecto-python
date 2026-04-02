@@ -1,0 +1,10 @@
+[
+    {
+        "nombre": "lapiz",
+        "precio": 300.0
+    },
+    {
+        "nombre": "goma",
+        "precio": 200.0
+    }
+]
