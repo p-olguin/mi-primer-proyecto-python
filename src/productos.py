@@ -65,6 +65,40 @@ def total_productos():
     
     return resultado["total"]
 
+def obtener_producto_por_id(id_producto):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    #Ejecuta la consulta
+    cursor.execute(
+        "SELECT id, nombre, precio FROM productos WHERE ID = ?", (id_producto,)
+    )
+
+    #recupera resultado de la consulta
+    producto = cursor.fetchone()
+
+    conn.close()
+    return producto
+
+def actualizar_producto(id_producto, nombre, precio):
+    if not nombre.strip():
+        return False, "El nombre no puede estar vacio"
+    if precio <= 0:
+        return False, "El precio debe ser mayor que 0"
+    
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE productos SET nombre = ?, precio = ? WHERE id = ?", 
+        (nombre, precio, id_producto,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return True, "Producto actualizado correctamente"
+
 
 
 

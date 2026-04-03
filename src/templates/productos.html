@@ -1,58 +1,52 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="contenedor">
-        <h1>Productos</h1>
+{% extends "base.html" %}
 
-        <a class="boton-volver" href="{{ url_for('inicio') }}">Volver al inicio</a>
+{% block title %}Productos{% endblock %}
 
-        {% if mensaje %}
-            <p class="mensaje">{{ mensaje }}</p>
-        {% endif %}
+{% block content %}
+    <h1>Productos</h1>
 
-        <h2>Agregar producto</h2>
-        <form method="POST" class="formulario">
-            <input type="text" name="nombre" placeholder="Nombre del producto" required>
-            <input type="number" name="precio" step="0.01" placeholder="Precio" required>
-            <button type="submit">Agregar</button>
-        </form>
+    <a class="boton-volver" href="{{ url_for('inicio') }}">Volver al inicio</a>
 
-        <h2>Listado</h2>
+    {% if mensaje %}
+        <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
 
-        {% if productos %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for producto in productos %}
-                    <tr>
-                        <td>{{ producto.id }}</td>
-                        <td>{{ producto.nombre }}</td>
-                        <td>${{ producto.precio }}</td>
-                        <td>
-                            <a class="eliminar" href="{{ url_for('eliminar', id_producto=producto.id) }}">Eliminar</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <h2>Agregar producto</h2>
+    <form method="POST" class="formulario">
+        <input type="text" name="nombre" placeholder="Nombre del producto" required>
+        <input type="number" name="precio" step="0.01" placeholder="Precio" required>
+        <button type="submit">Agregar</button>
+    </form>
 
-            <h3>Total: ${{ total }}</h3>
-        {% else %}
-            <p>No hay productos registrados.</p>
-        {% endif %}
-    </div>
-</body>
-</html>
+    <h2>Listado</h2>
+
+    {% if productos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>${{ producto.precio }}</td>
+                    <td>
+                        <a class="editar" href="{{ url_for('editar', id_producto=producto.id) }}">Editar</a>
+                        <a class="eliminar" href="{{ url_for('eliminar', id_producto=producto.id) }}" onclick="return confirm('¿Seguro que deseas eliminar este producto?')">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Total: ${{ total }}</h3>
+    {% else %}
+        <p>No hay productos registrados.</p>
+    {% endif %}
+{% endblock %}
